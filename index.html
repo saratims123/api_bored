@@ -57,16 +57,24 @@
         <p>Du keder dig. Men du har ikke overvejet at du kan bruge det fantastiske activity api til at programmere en
           app, som andre i samme situation kan bruge. Til dette lille projekt skal vi bruge:
           <ul>
-              <li><a href="https://www.boredapi.com/">The bored API</a></li>
-              <li><a href="https://handlebarsjs.com/">Handlebars javascript</a></li>
-              <li><a href="https://materializecss.com/">Materialize css</a></li>
+            <li><a href="https://www.boredapi.com/">The bored API</a></li>
+            <li><a href="https://handlebarsjs.com/">Handlebars javascript</a></li>
+            <li><a href="https://materializecss.com/">Materialize css</a></li>
+            <li><a href="https://jquery.com/">jQuery</a></li>
           </ul>
         </p>
       </div>
     </div>
+
     <div id="random-activity">
     </div>
 
+    <!-- placeholder -->
+    <div id="social-activity">
+    </div>
+
+    <div id="random-diy-activity">
+    </div>
   </div>
 
   <!-- End Document body
@@ -77,17 +85,54 @@
   <script id="random-activity-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col s12 m6">
+          <h5 id="fadeOutRandom">Random activity</h5>
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">{{type}}</span>
               <p>{{activity}}</p>
             </div>
             <div class="card-action">
-              <a href="#">This is a link</a>
+              <a href="http://www.google.com/search?q={{activity}}">Try your luck</a>
             </div>
           </div>
       </div>
     </div>
+</script>
+
+  <script id="social-activity-template" type="text/x-handlebars-template">
+    <div class="row">
+    <div class="col s12 m6">
+        <h5>Activity for two</h5>
+        <div class="card">
+        <div class="card-image">
+          <img src="https://source.unsplash.com/300x300/?{{type}}">
+          <span class="card-title">{{type}}</span>
+        </div>
+        <div class="card-content">
+          <p>{{activity}}</p>
+        </div>
+        <div class="card-action">
+          <a href="http://www.google.com/search?q={{activity}}">Try your luck</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script id="diy-activity-template" type="text/x-handlebars-template">
+  <div class="card">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator" src="https://source.unsplash.com/720x480/?{{type}}">
+    </div>
+    <div class="card-content">
+      <span class="card-title activator grey-text text-darken-4">{{activity}}<i class="material-icons right">more_vert</i></span>
+      <p><a href="http://www.google.com/search?q={{activity}}">This is a link</a></p>
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">{{activity}}<i class="material-icons right">close</i></span>
+      <p>{{price}}</p>
+    </div>
+  </div>
 </script>
 
   <!-- Page functionality
@@ -97,15 +142,41 @@
     var randomActivitySource = document.getElementById("random-activity-template").innerHTML;
     var randomActivityTemplate = Handlebars.compile(randomActivitySource);
     var randomActivityPlaceholder = document.getElementById('random-activity');
-
-
     // Get content and handle interaction
     $.ajax({
-      url: "https://www.boredapi.com/api/activity",
+      url: "https://www.boredapi.com/api/activity?activity",
     }).done(function (data) {
       console.log(data)
       randomActivityPlaceholder.innerHTML = randomActivityTemplate(data);
     });
+    // Setup handlebars for anden tingaling
+    var socialActivitySource = document.getElementById("social-activity-template").innerHTML;
+    var socialActivityTemplate = Handlebars.compile(socialActivitySource);
+    var socialActivityPlaceholder = document.getElementById('social-activity');
+    // Get content and handle interaction
+    $.ajax({
+      url: "https://www.boredapi.com/api/activity?participants=2",
+    }).done(function (data) {
+      console.log(data)
+      socialActivityPlaceholder.innerHTML = socialActivityTemplate(data);
+    });
+// setup handle for diy projekter
+    var diyActivitySource = document.getElementById("diy-activity-template").innerHTML;
+    var diyActivityTemplate = Handlebars.compile(diyActivitySource);
+    var diyActivityPlaceholder = document.getElementById('random-diy-activity');
+    // Get content and handle interaction
+    $.ajax({
+      url: "https://www.boredapi.com/api/activity?type=diy",
+    }).done(function (data) {
+      console.log(data)
+      diyActivityPlaceholder.innerHTML = diyActivityTemplate(data);
+    });
+// A $( document ).ready() block.
+$( document ).ready(function() {
+  $('#fadeOutRandom').click(function () {
+      $('#random-activity').fadeOut(3000);
+    });
+});
   </script>
 
 </body>
@@ -113,17 +184,11 @@
 </html>
 
 
-<!-- 
+<!-- jquarry er vigtig 
 OPGAVER 
-
-
 I denne øvelse skal vi følge tre grundlæggende trin i mange programmeringsprojekter. 
 For det første skal vi hente noget data, for det andet skal vi formattere det i HTML,
 og til sidst skal vi præsentere det for brugeren med et enkelt layout.   
-
-
 https://source.unsplash.com/400x400/?diy
-
 http://www.google.com/search?q={{activity}}
-
 -->
